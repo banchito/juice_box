@@ -63,9 +63,9 @@ async function testDB() {
     const postsWithHappy = await getPostsByTagName("#happy");
     console.log("Result getPost by Tag Name:", postsWithHappy);
 
-    console.log("Calling getAllTags");
-    const getAllTags = await getAllTags()
-    console.log("results getAllTags: ", getAllTags);
+    // console.log("Calling getAllTags");
+    // const getAllTags = await getAllTags()
+    // console.log("results getAllTags: ", getAllTags);
 
     console.log("Finished database tests!");
   } catch (error) {
@@ -83,16 +83,15 @@ const dropTables = async () => {
     console.log("Starting to drop tables...");
 
     await client.query(`
-         DROP TABLE IF EXISTS post_tags;
-         DROP TABLE IF EXISTS tags;
-         DROP TABLE IF EXISTS posts;
-         DROP TABLE IF EXISTS users;
+    DROP TABLE IF EXISTS post_tags;
+    DROP TABLE IF EXISTS tags;
+    DROP TABLE IF EXISTS posts;
+    DROP TABLE IF EXISTS users;
     `);
 
     console.log("Finished dropping tables!");
   } catch (error) {
     console.error("Error dropping tables!");
-    console.log(error);
     throw error;
   }
 };
