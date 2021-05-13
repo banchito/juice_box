@@ -43,7 +43,7 @@ const getUserById = async(userId) =>{
         if (!user) {return null}
         user.posts = await getPostsByUser(userId);
         
-        //delete user.password;
+        // delete user.password;
         return user;
     }catch(error){
         throw error;
@@ -55,7 +55,7 @@ const getUserByUsername = async(username) =>{
     const {rows: [user]} = await client.query(`
       SELECT * FROM users
       WHERE username = $1;
-    `,[username])
+    `,[username]);
     return user;
   }catch(error){
     throw error

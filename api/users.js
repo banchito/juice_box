@@ -1,6 +1,9 @@
 const express = require('express');
+const { promises } = require('fs');
+const jwt = require('jsonwebtoken')
 const usersRouter = express.Router();
-const { getAllUsers, getUserByUsername } = require('../db');
+
+const { getAllUsers, getUserByUsername, createUser } = require('../db');
 
 
 
@@ -12,9 +15,34 @@ usersRouter.use((req, res, next)=>{
 usersRouter.get('/', async (req, res) => {
     const users = await getAllUsers();
     res.send({
-      users
+      users,
     });
 });
+
+usersRouter.post('/register', async(req, res, next) => {
+    const {username, password, name, location} = req.body;
+    
+    try{
+        const _user = await getUserByUsername(username);
+        if(_user){
+            next({
+                name: 'UserExistsError',
+                message: 'A user by that username already exists'
+            });
+        }
+        const user = await createUser({
+            username, password, name, location
+        });
+
+        const token = jwt.sign({id: user.id, username}, process.env.JWT_SECRET,{expiresIn: '1w'});
+        res.send({
+            message: "Thank you for signing up",
+            token
+        });
+    }catch({name, message}){
+        next({name, message})
+    }
+})
 
 usersRouter.post('/login', async (req, res, next)=>{
     const {username, password} = req.body;
@@ -29,9 +57,10 @@ usersRouter.post('/login', async (req, res, next)=>{
 
   try{
       const user = await getUserByUsername(username);
+      console.log(user)
       if(user && user.password == password){
-          // create token & return to user
-          res.send({ message: "you're logged in!" });
+        const token = jwt.sign({id:user.id, username:user.username}, process.env.JWT_SECRET)
+          res.send({ message: "you're logged in!", token: token });
       }else{
         next({ 
             name: 'IncorrectCredentialsError', 
@@ -39,7 +68,7 @@ usersRouter.post('/login', async (req, res, next)=>{
           });
       }
   }catch(error){
-      console.log(error);
+      console.log("users.js:", error);
       next(error);
   }
     

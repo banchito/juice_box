@@ -1,4 +1,4 @@
-// CRUD Web Server
+require("dotenv").config();
 
 const {client} = require('./db')
 client.connect();
