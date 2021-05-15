@@ -3,8 +3,11 @@ const { Client } = require("pg");
 // const { rows } = require("pg/lib/defaults");
 // const { errorMonitor } = require("stream");
 
-const client = new Client("postgres://localhost:5432/juiceboxdev");
-
+const client = new Client(process.env.DATABASE_URL ||'postgres://localhost:5432/juiceboxdev');
+// const client = new Client({
+//   connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/juicebox-dev',
+//   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+// });
 const createUser = async ({ username, password, name, location }) => {
   try {
     const {
