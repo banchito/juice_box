@@ -7,8 +7,7 @@ const jwt             = require('jsonwebtoken');
 require('dotenv').config();
 
 
-const { getUserById } = require('../db');
-const { nextTick } = require('process');
+const { getUserById }   = require('../db');
 
 const { JWT_SECRET }  = process.env;
 
@@ -38,7 +37,7 @@ apiRouter.use(async(req, res, next) => {
 })
 
 apiRouter.use((req, res, next) => {
-    console.log(req);
+    console.log("req", req);
     if(req.user){
         console.log("User is set:", req.user);
     }
