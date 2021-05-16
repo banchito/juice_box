@@ -5,7 +5,7 @@ const { getAllPosts, createPost, updatePost, getPostById } = require("../db");
 const { requireUser } = require("./utils");
 
 postsRouter.use((req, res, next) => {
-  console.log("A request it's beign made to /posts");
+  console.log("A request it's being made to /posts");
   console.log("req.user: ", req.user);
   next();
 });
@@ -27,7 +27,9 @@ postsRouter.post("/", requireUser, async (req, res, next) => {
       content: content,
       tags: postData.tags,
     };
+
     const post = await createPost(postData);
+
     console.log(post);
     if (post) {
       res.send({ post });
@@ -36,6 +38,7 @@ postsRouter.post("/", requireUser, async (req, res, next) => {
     next({ name, message });
   }
 });
+
 postsRouter.patch("/:postId", requireUser, async (req, res, next) => {
   console.log("req params: ", req.params);
   const { postId } = req.params;
@@ -92,7 +95,7 @@ postsRouter.get("/", async (req, res) => {
   try {
     const allPosts = await getAllPosts();
     const posts = allPosts.filter((post) => {
-        // the post is active, doesn't matter who it belongs to
+        
         return post.active || (req.user && post.author.id === req.user.id);
     });
 
